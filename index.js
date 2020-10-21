@@ -5,17 +5,19 @@ const myApp = expressSrv();
 const fileSrv = require ('fs');
 
 // Import routers.  Corresponds to modules.export = routerSrv
-const usersRouter = require ('./routers/users.js');
-const postsRouter = require ('./routers/posts.js');
-const commentsRouter = require ('./routers/comments.js');
+const usersRouter = require ('./routers/users');
+const postsRouter = require ('./routers/posts');
+const commentsRouter = require ('./routers/comments');
 // Settings
 const localPort = 8080;
 
 console.clear();
 console.log (`${"=".repeat(30)}\nUserPostsComments-Routing-Y\n${"=".repeat(30)}`);
+//
+// reloadMockData();
 
 // middlewhere that coverts valid json structures to JS Objects
-myApp.set("myInternalRevision", '1.0.0.89');
+myApp.set("myInternalRevision", '1.0.0.103');
 myApp.set("json spaces", 3);
 myApp.use(expressSrv.json());
 

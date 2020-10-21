@@ -7,7 +7,10 @@ const fileSrv = require('fs');
 
 usersList =[];
 postsList =[];
-// reloadMockData();
+
+// Yogev:   uncomment line 12 . comment lines 14, 15
+//reloadMockData();
+
 usersList = require('../db-mock/users.json');
 postsList = require('../db-mock/posts.json');
 
