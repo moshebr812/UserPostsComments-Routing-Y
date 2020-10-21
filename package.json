@@ -1,0 +1,14 @@
+{
+  "name": "userpostscomments-routing-y",
+  "version": "1.0.0",
+  "description": "Yogev lesson 2020-10-14",
+  "main": "index.js",
+  "scripts": {
+    "test": "Zebra"
+  },
+  "author": "M.B. 812",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
