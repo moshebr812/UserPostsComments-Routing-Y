@@ -57,4 +57,7 @@ function  reloadMockData  ()  {
     tmpArray = require('./db-mock/comments-org.json');
     fileSrv.writeFileSync ('./db-mock/comments.json', JSON.stringify(tmpArray));
     console.log (`reloadMockData:  |comments: ${tmpArray.length}`);
+
+    // ======
+    console.log ('\n\n MUST RESTART NODE on FILE to Apply');
 }

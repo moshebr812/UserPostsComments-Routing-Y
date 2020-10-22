@@ -1,5 +1,6 @@
 // NOTE THE module.exports to the new routerSrv
 // Services 
+const { response } = require('express');
 const expressSrv = require('express');
 const routerSrv = expressSrv.Router();  // as we did myApp = expressSrv();
 const fileSrv = require('fs');
@@ -21,6 +22,12 @@ routerSrv.get('/' , (request, response) =>{
     response.send( usersList );   // I loaded all arrays via reloadMockData();
 });
 
+// routerSrv.get('/reload' , (req, res) => {
+//   console.log('/users/reload ....');
+//   usersReloadMockData();
+//   res.send( usersList );
+// });
+
 // routerSrv.get('/users/:id/posts' ,(request, response) => {
 routerSrv.get('/:id/posts' ,(request, response) => {
     let userId = parseInt(request.params.id);
@@ -30,14 +37,37 @@ routerSrv.get('/:id/posts' ,(request, response) => {
 })
 
 
+// Standard Insert. method: POST.  body:  in JSON Format
+routerSrv.post('/', (request, response) => {
+    // Debug
+    console.log (`/users/posts.   request.method: ${request.method}`);
+    if (request.body.id) {  // valid request input
+        console.log('---- VALID body\n' + JSON.stringify ( request.body ) );
+        usersList.push( request.body );
+    } else {  // use mock data
+        console.log (` invalid data on body. Inserting mockdata \n${mockNewUser}`);
+        usersList.push( mockNewUser );
+    }
 
+    fileSrv.writeFileSync('./db-mock/users.json', JSON.stringify(usersList));
+    console.log(`POST .... usersList.length after post:  ${usersList.length}`)
+    // New Array
+    response.send(usersList); // Send the new Array, including tne new Insert
+});
+
+// read=get,  delete=delete,  insert=post for/users/:id ==>> Can use a common route
 routerSrv.route('/:id')
     // routerSrv.get('/users/:id' , (request, response) =>{     // the "user"  is defined in index.js
     // routerSrv.get('/:id' , (request, response) =>{           // this section is now common get/delete/put which will be using /:id
-    .get( (request, response) =>{
+    .get( (request, response) => {
             let userId = request.params.id;     // user id from URL
             let userIndex = usersList.findIndex (object => object.id == userId);  // location of user in Array
-            let userName = usersList[userIndex].name; // user name, assuming here we found the userId in the Array
+            let userName = '';
+            if (userIndex>=0) {
+                userName = usersList[userIndex].name; // user name, assuming here we found the userId in the Array
+            } else {
+                userName = `user by id ${userId} NOT FOUND`;
+            }    
         
             console.log(`\n routerSrv=Users  path="/:id"  |indexLocation: ${userIndex}   |userId: ${userId}  |userName: ${userName}`);
             response.send( usersList[userIndex] );
@@ -55,18 +85,12 @@ routerSrv.route('/:id')
                 console.log(`\n routerSrv=Users   userId to delete NOT FOUND. No Changes  |countAfter: ${usersList.length}`);
             }
             response.send(usersList);   // the list after the delete
-    })
-    .post( (request, response) => {
-        // Debug
-        console.log(`\n routerSrv=Users   post = Insert usersCountBefore: ${usersList.length}`);
-        // Write to file
-        fileSrv.writeFileSync ('../db-mock/users.json', JSON.stringify(mockNewUser));
-        // New Array
-        response.send(usersList);  
     });
-    
+
+
 //====================================================
-function  reloadMockData  ()  {
+function  usersReloadMockData  ()  {
+    console.log ('users.js --> usersReloadMockData()')
     // reload users array
     let tmpArray = require('../db-mock/users-org.json');
     fileSrv.writeFileSync ('../db-mock/users.json', JSON.stringify(tmpArray));
@@ -80,8 +104,8 @@ function  reloadMockData  ()  {
 
 const mockNewUser  =
 {
-    "id": 999,
-    "name": "Moshe Braude",
+    "id": 808080,
+    "name": "Moshe Test Braude",
     "username": "DoItNow",
     "email": "aaa@mmm.com",
     "address": {
